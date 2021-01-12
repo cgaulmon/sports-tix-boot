@@ -6,11 +6,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 @Configuration
 @EnableWebSecurity
+@EnableSwagger2
 public class WebConfig extends WebSecurityConfigurerAdapter {
 	
-	private static final String[] PUBLIC_URLS = { "/api/events/**","/api/sports/**","/user/login", "/user/register", "user/resetpassword/**","/user/image/**" };
+	private static final String[] PUBLIC_URLS = { "/api/events/**","/api/sports/**","/user/login", "/user/register", "user/resetpassword/**","/user/image/**","/csrf", "/v2/api-docs", "/swagger-resources/configuration/ui", "/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/configuration/security", "/swagger-ui.html", "/webjars/**" };
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -25,6 +28,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);*/
 
 	}
+	
 
-
+	
 }
