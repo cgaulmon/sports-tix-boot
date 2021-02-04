@@ -1,6 +1,7 @@
 package cdg.dev.sportstix.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,11 +22,13 @@ public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(nullable = false, updatable = false)
-	private Long id;	
+	private Long id;
 	private String userId;
 	private String firstName;
 	private String lastName;
-	private String username;
 	private String password;
 	private String email;
+	private Date joinDate;
+	private String[] authorities;
+	private String role;
 }

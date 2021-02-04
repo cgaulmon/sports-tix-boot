@@ -22,10 +22,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				.authorizeRequests().antMatchers(PUBLIC_URLS).permitAll().anyRequest().authenticated();
-				/*.and()
-				.exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
-				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-				.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);*/
 
 	}
 	
