@@ -24,7 +24,7 @@ import cdg.dev.sportstix.security.jwt.JwtAuthorizationFilter;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	private static final String[] PUBLIC_URLS = { "/user/login", "/user/register" };
+	private static final String[] PUBLIC_URLS = {  "/api/events/**","/api/sports/**","/user/login", "/user/register", "user/resetpassword/**","/user/image/**","/csrf", "/v2/api-docs", "/swagger-resources/configuration/ui", "/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/configuration/security", "/swagger-ui.html", "/webjars/**"  };
     private JwtAuthorizationFilter jwtAuthorizationFilter;
     private JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;

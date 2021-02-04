@@ -1,77 +1,38 @@
 package cdg.dev.sportstix.service;
 
-import static cdg.dev.sportstix.enums.Role.ROLE_USER;
+import java.io.IOException;
+import java.util.List;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
-
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import cdg.dev.sportstix.dto.UserDTO;
 import cdg.dev.sportstix.entities.User;
-import cdg.dev.sportstix.repositories.UserRepository;
+import cdg.dev.sportstix.exception.EmailExistException;
+import cdg.dev.sportstix.exception.EmailNotFoundException;
+import cdg.dev.sportstix.exception.MessagingException;
+import cdg.dev.sportstix.exception.UserNotFoundException;
+import cdg.dev.sportstix.exception.UsernameExistException;
 import cdg.dev.sportstix.security.domain.UserPrincipal;
 
-@Service
-public class UserService implements UserDetailsService  {
+public interface UserService {
 
-	private UserRepository userRepository;
-	private BCryptPasswordEncoder passwordEncoder;
-	private AuthenticationManager authenticationManager;
-	
-	public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-		super();
-		this.userRepository = userRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.authenticationManager = authenticationManager;
-	}
+    UserDTO register(UserDTO user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException;
 
-	public UserDTO register(UserDTO newUser) {
-		User user = new User();
-        user.setUserId(newUser.getUserId());
-        user.setFirstName(newUser.getFirstName());
-        user.setLastName(newUser.getLastName());
-        user.setEmail(newUser.getEmail());
-        user.setJoinDate(new Date());
-        user.setPassword(encodePassword(newUser.getPassword()));
-        user.setRole(ROLE_USER.name());
-        user.setAuthorities(ROLE_USER.getAuthorities());
-		return new UserDTO(userRepository.save(user));
-	}
-	
-	private String encodePassword(char[] password) {
-		return passwordEncoder.encode(Arrays.toString(password));
-	}
+    List<User> getUsers();
 
+    User findUserByUsername(String username);
+    
+    UserPrincipal findUserPrincipalByUserId(String userId);
 
-	public User findByUserId(String userId) {
-		Optional<User> userOptional = userRepository.findByUserId(userId);
-		if(userOptional.isPresent()) {
-			return userOptional.get(); 
-		} else {
-			return new User();
-		}
-	}
+    User findUserByEmail(String email);
 
-	@Override
-	public UserDetails loadUserByUsername(String userName) {
-		return findUserPrincipalByUserId(userName);
-		
-	}
+    User addNewUser(String firstName, String lastName, String username, String email, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException;
 
-	public UserPrincipal findUserPrincipalByUserId(String userId) {
-		User user = findByUserId(userId);
-		return new UserPrincipal(user);		
-	}
-	
-	private void authenticate(String userId, String password) {
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userId, password));
-	}
+    User updateUser(String currentUsername, String newFirstName, String newLastName, String newUsername, String newEmail, String role, boolean isNonLocked, boolean isActive, MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException;
 
+    void deleteUser(String username) throws IOException;
+
+    void resetPassword(String email) throws MessagingException, EmailNotFoundException;
+
+  
 }
